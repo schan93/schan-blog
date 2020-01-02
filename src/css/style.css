@@ -1,14 +1,6 @@
-/* @font-face {
-
-} */
-
 body {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
-  /* color: #f0f0f0 */
-}
-
-.container {
 }
 
 .loading {
@@ -40,25 +32,6 @@ body {
   margin-bottom: 20px;
 }
 
-.images-appear {
-  opacity: 0.01;
-}
-
-.images-appear.images-appear-active{
-  opacity: 1;
-  transition: opacity 1s ease-in;
-}
-
-
-.images-enter {
-  opacity: 0.01;
-}
-
-.images-enter.images-enter-active{
-  opacity: 1;
-  transition: opacity 1s ease-in;
-}
-
 input, select, textarea, button, button[type=submit] {
   font-family: inherit;
 }
@@ -70,32 +43,6 @@ input, select, textarea, button, button[type=submit] {
   max-width: 940px;
 }
 
-.darken-welcome-image {
-  background-image: 
-    linear-gradient(
-      rgba(0, 0, 0, 0.4),
-      rgba(0, 0, 0, 0.4)
-    ),
-    url(../assets/images/marathon-far.jpg);
-}
-
-.welcome-section {
-  font-size: 16px;
-}
-
-.header {
-  margin-top: 16px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 26px;
-}
-
-.content-title {
-  text-align: center;
-  font-size: 26px;
-  margin-bottom: 30px;
-}
-
 .content-wrapper {
   padding-top: 30px;
   padding-bottom: 50px;
@@ -105,20 +52,6 @@ input, select, textarea, button, button[type=submit] {
   margin-left: auto;
   margin-right: auto;
   max-width: 940px;
-}
-
-
-.row-wrapper {
-  margin-bottom: 30px;
-}
-
-.post-body {
-  margin-left: 20px;
-}
-
-.expanded-view div {
-  font-weight: bold;
-  font-size: 1.2em;
 }
 
 .post-link, .nav a {
@@ -170,14 +103,13 @@ input, select, textarea, button, button[type=submit] {
   margin-block-end: 8px;
 }
 
-.post-date {
+.post-date, .post-type {
   font-size: 13px;
   color: #aaa;
 }
 
 .post-type {
   font-size: 14px;
-  color: #aaa;
 }
 
 .nav {
@@ -198,10 +130,6 @@ input, select, textarea, button, button[type=submit] {
 .about-me-content {
   display: flex;
   flex-direction: column;
-}
-
-.loading-spinner {
-  vertical-align: middle; 
 }
 
 .nav a:hover, .nav a:focus {
@@ -255,17 +183,10 @@ input, select, textarea, button, button[type=submit] {
 }
 
 .form-tags label {
-  border: 1px solid #cccccc;
-  text-decoration: none;
-  padding: 10px 0px 10px 8px;
-  border-radius: 3px;
-  color: #777777;
-  font-size: 16px;
-  text-align: center;
   width: 100%;
 }
 
-.home-button, .form-button {
+.home-button, .form-button, .form-tags label {
   border: 1px solid #cccccc;
   text-decoration: none;
   padding: 10px 8px 10px 8px;
@@ -295,11 +216,6 @@ input[type="radio"]:hover + label {
   flex-direction: column;
 }
 
-.front-end {
-  margin-right: 20px;
-  margin-left: 20px;
-}
-
 .form-image + label {
   cursor: pointer;
   display: block;
@@ -309,8 +225,6 @@ input[type="radio"]:hover + label {
 	outline: 1px dotted #000;
 	outline: -webkit-focus-ring-color auto 5px;
 }
-
-
 
 .form-image { 
   width: 0.1px;

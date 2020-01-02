@@ -65,9 +65,7 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "start": "webpack-dev-server --open --config webpack.dev.js",
-    "server": "node -r dotenv/config src/server/server-dev.js",
-    "dev": "concurrently \"npm run server\" \"npm run start\"",
-    "heroku-prebuild": "yarn install --dev",
-    "heroku-postbuild": "webpack -p && yarn install && npm run build && npm run dev"
+    "server": "nodemon -r dotenv/config src/server/server.js",
+    "dev": "concurrently \"npm run server\" \"npm run start\""
   }
 }

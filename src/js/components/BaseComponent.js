@@ -23,13 +23,10 @@ function BaseComponent(props) {
             <section className="content-wrapper">
                 <div className="content-container">
                     <div className="post-content">
-                        {/* TODO: fix the /, either always redirect to home or / */}
                         <Route exact path="/" render={(props) => <PostListViewContainer {...props} header="- Welcome -"/>} />
                         <Route exact path="/home" render={(props) => <PostListViewContainer {...props} header="- Welcome -"/>} />
                         <Route exact path="/aboutme" render={(props) => <AboutMeContainer {...props}/>}  />
-                        <Route exact path="/posts/:id" render={(props) => 
-                            <ExpandedViewContainer {...props} />}
-                        />
+                        <Route exact path="/posts/:id" render={(props) => <ExpandedViewContainer {...props} />} />
                         <Route exact path="/callback" component={LoginCallback} />
                         <SecuredRoute path='/create'
                             component={CreatePostContainer}

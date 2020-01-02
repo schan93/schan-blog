@@ -6,7 +6,7 @@ class Auth {
             domain: process.env.REACT_APP_AUTH0_DOMAIN,
             audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/userinfo`,
             clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
-            redirectUri: 'http://localhost:8081/callback',
+            redirectUri: process.env.REACT_APP_AUTH0_CALLBACK_URL,
             responseType: 'id_token',
             scope: 'openid profile'
         });
@@ -32,7 +32,7 @@ class Auth {
 
     signout = () => {
         this.auth0.logout({
-            returnTo: 'http://localhost:8081',
+            returnTo: process.env.REACT_APP_AUTH0_LOGOUT_URL,
             clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
           });
     }
@@ -40,9 +40,7 @@ class Auth {
     silentAuth = () => {
         return new Promise((resolve, reject) => {
           this.auth0.checkSession({}, (err, authResult) => {
-              console.log("Auth result: ", authResult);
             if (err) {
-                console.log("Err: ", err);
                 return reject(err);
             } 
             this.setSession(authResult);

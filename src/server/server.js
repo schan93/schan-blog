@@ -5,26 +5,14 @@ const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 const finale = require('finale-rest');
 const app = express();
-const aws = require('aws-sdk');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
-const fs = require('fs');
+const uploadMiddleware = require('./upload');
 
 app.use(cors());
-aws.config.update({
-    region: process.env.AWSRegion,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    signatureVersion: 'v4'
-});
-
-let s3 = new aws.S3({apiVersion: '2006-03-01'});
+app.use(bodyParser.json());
 
 const port = 8080;
-
-app.use(bodyParser.json());
-const distPath = express.static(path.join(__dirname, 'dist'));
-app.use(distPath);
 
 // configure the jwt
 const checkJwt = jwt({
@@ -45,7 +33,6 @@ const database = new Sequelize({
     dialect: 'sqlite',
     storage: './db.sqlite'
 });
-
 
 // define the model for the Posts data model
 const Post = database.define('posts', {
@@ -91,56 +78,7 @@ PostResource.create.auth((req, res, context) => {
     })
 });
 
-app.use('/s3', require('react-s3-uploader/s3router')({
-    bucket: process.env.AWSBucket,
-    signatureExpires: 300,
-    headers: {'Access-Control-Allow-Origin': '*', 'x-amz-acl': 'public-read'}
-}));
-
-app.post('/api/image/upload', (req, res) => {
-    const fileContent = fs.readFileSync(process.env.UPLOAD_FILE_PATH + req.body.imageName);
-    const params = {
-        Bucket: 'schan-blog-img-bucket',
-        Key: req.body.postId + '_' + req.body.imageName,
-        Body: fileContent
-    }
-
-    s3.upload(params, (err, data) => {
-        if(err) {
-            console.log("Err: ", err);
-        } else {
-            console.log("returning data from upload: ", data);
-            res.send({data: data});
-        }
-    })
-});
-
-app.get('/api/image/:imageId', (req, res, next) => {
-    const params = {
-        Bucket: 'schan-blog-img-bucket',
-        Key: req.params.imageId
-    }
-
-    s3.getSignedUrl('getObject', params, (err, url) => {
-        if(err) {
-            console.log("Err: ", err);
-        } else {
-            res.send({signedUrl: url});
-        }
-    })
-});
-
-app.get('/api/images', (req, res) => {
-    let params = {Bucket: 'schan-blog-img-bucket'};
-    s3.listObjectsV2(params, (err, data) => {
-        if(err) {
-            console.log("Err: ", err);
-        } else {
-            console.log("Url: ", data);
-            res.send({posts: data.Contents});
-        }
-    });
-})
+PostResource.use(uploadMiddleware);
 
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/index.html'), (err) => {
@@ -149,7 +87,6 @@ app.get('/*', (req, res) => {
         }
     });
 });
-
 
 database.sync().then(() => {
     app.listen(port, () => console.log(`Blog app listening on port ${port}`))

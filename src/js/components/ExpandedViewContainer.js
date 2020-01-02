@@ -14,7 +14,6 @@ class ExpandedViewContainer extends Component {
         this.getPosts();
     }
 
-    // TODO: Query for some data
     getPosts = async() => {
         const id = this.props.match.params.id;
         const postResponse = await fetch('/api/posts/' + id);

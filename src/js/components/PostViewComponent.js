@@ -6,7 +6,11 @@ function PostViewComponent(props) {
         <div className="post-details">
             {
                 props.isListView ? 
-                    <Link className="post-link" to={{pathname: `/posts/${props.post.id}`}} key={props.post.id}>
+                    <Link 
+                        className="post-link" 
+                        to={{pathname: `/posts/${props.post.id}`}} 
+                        key={props.post.id}
+                    >
                         <h2 className="post-title">{props.post.title}</h2>
                     </Link>
                 : 

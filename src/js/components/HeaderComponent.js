@@ -9,7 +9,6 @@ function HeaderComponent(props) {
         props.history.replace('/');
     }
 
-
     return (        
         <section className="header-section">
             <nav className="nav">
@@ -21,9 +20,13 @@ function HeaderComponent(props) {
                     !auth.isAuthenticated() && <Link to="/login" onClick={auth.signin}>Login</Link>
                 }
                 {
-                    auth.isAuthenticated() && <Link to="/" onClick={() => {signout()}}>Logout</Link>
+                    auth.isAuthenticated() && 
+                        <Link to="/" onClick={() => {signout()}}>Logout</Link> 
                 }
-                <Link to="/create">Create</Link>
+                {
+                    auth.isAuthenticated() &&
+                        <Link to="/create">Create</Link>
+                }
             </div>
 
             </nav>

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import '../../css/style.css';
 import PostViewComponent from './PostViewComponent';
 import { NavLink } from 'react-router-dom';
 
 function ExpandedViewComponent(props) {
-    
+
     return (
         <div>
             <img className="img-component-expanded" src={props.post.img} />

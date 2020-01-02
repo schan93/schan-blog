@@ -1,30 +1,37 @@
-let aws = require('aws-sdk');
-var multer = require('multer');
-var multerS3 = require('multer-s3');
-var express = require('express');
-require('dotenv').config(); // so you can get your env file
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
+const { uuid } = require('uuidv4');
 
 aws.config.update({
-    region: 'us-west-2',
-    accessKeyId: process.env.AWSAccessKeyId,
-    secretAccessKey: process.env.AWSSecretKey
-})
+    region: process.env.AWSRegion,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    signatureVersion: 'v4'
+});
 
-let s3 = aws.S3({apiVersion: '2006-03-01'});
+let s3 = new aws.S3({apiVersion: '2006-03-01'});
 
-var upload = multer({
+const upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: process.env.S3_BUCKET,
-        metadata: function(req, file, cb) {
-            cb(null, {fieldName: file.fieldname});
-        },
-        key: function(req, file, cb) {
-            cb(null, Date.now().toString());
+        bucket: process.env.AWSBucket,
+        key: (req, file, cb) => { 
+            req.body.id = uuid();
+            cb(null, req.body.id + '_' + file.originalname);
         }
     })
-})
+}).single('file');
 
-app.post('/upload', upload.array('photos', 3), function(req, res, next) {
-    res.send('Successfully uploaded ' + req.files.length + ' files.');
-})
+module.exports = {
+    create: {
+        write: {
+            before: (req, res, context) => {
+                upload(req, res, () => {
+                    req.body.img = req.file.location;
+                    return context.continue(req.body);
+                })
+            }
+        }
+    }
+}

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { uuid } from 'uuidv4';
-import ReactS3Uploader from 'react-s3-uploader';
 import auth from './Auth';
 import { withRouter } from 'react-router-dom';
 
@@ -14,67 +12,50 @@ class CreatePostContainer extends Component {
             content: "",
             type: "",
             img: {},
-            fileUploadName: "Upload Image"
+            file: null,
+            fileUploadName: "Upload File"
         }
+    }
+
+    setupBody = (data) => {
+        let form = new FormData(data);
+        form.append('postDate', new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'}));
+        return form;
     }
 
     handleSubmit = async (event) => {
-        
         event.preventDefault();
         this.props.onLoadingChange(true);
-        const form = new FormData(event.target);
-
         const headers = {
-            'content-type': 'application/json',
-            'accept': 'application/json',
             'Authorization': `Bearer ${auth.getIdToken()}`
         }
-        const id = uuid();
-        const imageUploadBody = JSON.stringify({
-            postId: id,
-            imageName: form.get("file").name
-        });
-        let uploadResponse = await fetch('/api/image/upload', {
-            method: 'POST',
-            headers: headers,
-            body: imageUploadBody
-        });
-        let uploadJson = await uploadResponse.json();
-
-        const postBody = JSON.stringify({
-            title: form.get("title"),
-            content: form.get("content"),
-            id: id,
-            img: uploadJson.data.Location,
-            type: "Microservices",
-            postDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'}) 
-        });
+        const body = this.setupBody(event.target);
         await fetch('/api/posts', {
             method: 'POST',
             headers: headers,
-            body: postBody
+            body: body
         });
+
         // navigate back to all posts
         this.props.onLoadingChange(false);
         this.props.history.replace('/');
-
     }
 
     handleFileChange = (event) => {
-        let fileName = event.target.value.split("\\").pop();
-        if(fileName) {
-            this.setState({fileUploadName: fileName});
-        }
+        this.setState({
+            file: event.target.files[0],
+            fileUploadName: event.target.files[0].name
+        });
+    
     }
 
     handlePostTypeChange = (event) => {
-        console.log("Inner txt: ", event.target.value);
         this.setState({type: event.target.value});
     }
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit} className="form-display">
+            <form onSubmit={this.handleSubmit} className="form-display" encType="multipart/form-data">
                 <input 
                     className="form-input form-field" 
                     name="title"
@@ -106,24 +87,29 @@ class CreatePostContainer extends Component {
                     <input 
                         type="radio" 
                         id="microservices" 
-                        name="microservices" 
+                        name="type"
                         value="Microservices"
                         onChange={this.handlePostTypeChange} 
                         checked={this.state.type === "Microservices"} 
                     />
                     <label htmlFor="microservices">Microservices</label>
-
                     <input 
                         type="radio" 
                         id="front-end" 
-                        name="front-end" 
+                        name="type"
                         value="Front End" 
                         onChange={this.handlePostTypeChange} 
                         checked={this.state.type === "Front End"}  
                     />
                     <label htmlFor="front-end" className="front-end">Front End</label>
-
-                    <input type="radio" id="general" name="general" value="General" onChange={this.handlePostTypeChange} checked={this.state.type === "General"} />
+                    <input 
+                        type="radio" 
+                        id="general" 
+                        name="type"
+                        value="General" 
+                        onChange={this.handlePostTypeChange} 
+                        checked={this.state.type === "General"} 
+                    />
                     <label htmlFor="general">General</label> 
                 </div>
                 <div className="form-field">
