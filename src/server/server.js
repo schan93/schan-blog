@@ -11,6 +11,9 @@ const uploadMiddleware = require('./upload');
 
 app.use(cors());
 app.use(bodyParser.json());
+// serve static files of our react app
+app.use(express.static(path.join(__dirname, '../../dist')));
+
 
 const port = 8080;
 
