@@ -32,7 +32,7 @@
     "@babel/preset-env": "^7.7.4",
     "@babel/preset-react": "^7.0.0",
     "@types/react": "^16.9.13",
-    "aws-sdk": "^2.529.0",
+    "aws-sdk": "^2.814.0",
     "babel-loader": "^8.0.6",
     "babel-watch": "^7.0.0",
     "concurrently": "^5.0.2",
